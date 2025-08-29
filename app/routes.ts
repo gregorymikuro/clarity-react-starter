@@ -9,6 +9,7 @@ export default remixRoutesOptionAdapter((defineRoutes) => {
       "**/__*.*", // ignore files starting with (double underscore) __
       "**/*.server.ts", // ignore server-only files - files ending with .server.ts
       "**/*.client.ts", // ignore client-only files - files ending with .client.ts
+      "**/[A-Z]*.{ts,tsx}", // ignore files starting with an uppercase letter
     ],
   });
 }) satisfies RouteConfig;
