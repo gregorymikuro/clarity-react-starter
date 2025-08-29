@@ -1,3 +1,5 @@
+import type { Route } from "./+types/_index";
+
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "New React Router App" },
