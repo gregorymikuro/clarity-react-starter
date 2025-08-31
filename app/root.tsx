@@ -6,8 +6,10 @@ import {
   Scripts,
   ScrollRestoration,
   isRouteErrorResponse,
+  redirect,
 } from "react-router";
 import "./app.css";
+import { appContext } from "$/server/context";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -21,6 +23,33 @@ export const links: Route.LinksFunction = () => [
     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
   },
 ];
+
+export const unstable_middleware: Route.unstable_MiddlewareFunction[] = [
+  async ({ context, request }) => {
+    const url = new URL(request.url);
+
+    const { session } = context.get(appContext);
+
+    if (["/signin", "/signup"].includes(url.pathname) && session) {
+      throw redirect("/dashboard");
+    }
+
+    if (url.pathname.startsWith("/dashboard") && !session) {
+      throw redirect("/signin");
+    }
+  },
+];
+
+export async function loader({ context }: Route.LoaderArgs) {
+  const { clientEnv, isAuthenticated, user, session } = context.get(appContext);
+
+  return {
+    clientEnv,
+    isAuthenticated,
+    user,
+    session,
+  };
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -40,8 +69,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function App() {
-  return <Outlet />;
+export default function App({ loaderData: { clientEnv } }: Route.ComponentProps) {
+  return (
+    <>
+      <Outlet />;
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `window.ENV = ${JSON.stringify(clientEnv)}`,
+        }}
+      ></script>
+    </>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
