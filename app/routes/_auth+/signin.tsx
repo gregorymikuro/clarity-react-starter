@@ -4,6 +4,7 @@ import Input from "~/components/Input";
 import { signIn } from "~/utils/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import * as z from "zod";
 
 const signInSchema = z.object({
@@ -23,17 +24,16 @@ export default function SignIn() {
   });
 
   const onSignIn = async (data: SignInForm) => {
-    const results = await signIn.email({
+    const { error } = await signIn.email({
       email: data.email,
       password: data.password,
       callbackURL: "/dashboard",
+      fetchOptions: {},
     });
 
-    if (results.error) {
-      console.log("Sign in error:", results.error);
+    if (error) {
+      toast.error(error.message || "Sign in failed. Please try again.");
     }
-
-    console.log("Sign in:", results);
   };
 
   return (
