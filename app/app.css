@@ -27,7 +27,7 @@ body {
 
 html,
 body {
-  @apply bg-white;
+  @apply text-brand-2 bg-white;
 
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;
