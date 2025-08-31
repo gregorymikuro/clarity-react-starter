@@ -1,6 +1,7 @@
 import type { Route } from "./+types/signup";
 import Button from "~/components/Button";
 import Input from "~/components/Input";
+import { signUp } from "~/utils/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -9,8 +10,8 @@ const signUpSchema = z
   .object({
     name: z.string().min(2, "Name must be at least 2 characters"),
     email: z.email("Please enter a valid email address"),
-    password: z.string().min(6, "Password must be at least 6 characters"),
-    confirmPassword: z.string().min(6, "Password must be at least 6 characters"),
+    password: z.string().min(8, "Password must be at least 8 characters"),
+    confirmPassword: z.string().min(8, "Password must be at least 8 characters"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
@@ -30,9 +31,19 @@ export default function SignUp() {
     },
   });
 
-  const onSignUp = (data: SignUpForm) => {
-    console.log("Sign up:", data);
-    alert("Account created successfully!");
+  const onSignUp = async (data: SignUpForm) => {
+    const results = await signUp.email({
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      callbackURL: "/dashboard",
+    });
+
+    if (results.error) {
+      console.log("Sign up error:", results.error);
+    }
+
+    console.log("Sign up:", results);
   };
 
   return (

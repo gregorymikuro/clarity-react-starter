@@ -1,13 +1,14 @@
 import type { Route } from "./+types/signin";
 import Button from "~/components/Button";
 import Input from "~/components/Input";
+import { signIn } from "~/utils/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 const signInSchema = z.object({
   email: z.email("Please enter a valid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
 type SignInForm = z.infer<typeof signInSchema>;
@@ -21,9 +22,18 @@ export default function SignIn() {
     },
   });
 
-  const onSignIn = (data: SignInForm) => {
-    console.log("Sign in:", data);
-    alert("Signed in successfully!");
+  const onSignIn = async (data: SignInForm) => {
+    const results = await signIn.email({
+      email: data.email,
+      password: data.password,
+      callbackURL: "/dashboard",
+    });
+
+    if (results.error) {
+      console.log("Sign in error:", results.error);
+    }
+
+    console.log("Sign in:", results);
   };
 
   return (
