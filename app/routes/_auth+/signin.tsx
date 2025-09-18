@@ -1,4 +1,5 @@
 import type { Route } from "./+types/signin";
+import { Link, href } from "react-router";
 import Button from "~/components/Button";
 import Input from "~/components/Input";
 import { signIn } from "~/utils/auth-client";
@@ -69,6 +70,13 @@ export default function SignIn() {
           </form>
         </div>
       </div>
+
+      <p className="mt-5 text-center text-gray-500">
+        You don't have an account?{" "}
+        <Link to={href("/signup")} className="text-blue-600 underline">
+          Sign up
+        </Link>
+      </p>
     </div>
   );
 }

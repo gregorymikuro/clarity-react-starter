@@ -1,4 +1,5 @@
 import type { Route } from "./+types/signup";
+import { Link, href } from "react-router";
 import Button from "~/components/Button";
 import Input from "~/components/Input";
 import { signUp } from "~/utils/auth-client";
@@ -47,15 +48,12 @@ export default function SignUp() {
 
   return (
     <div className="mx-auto w-full max-w-md">
-      {/* Card */}
       <div className="border-brand-7 bg-brand-1 text-brand-2 rounded-lg border shadow-sm">
-        {/* Card Header */}
         <div className="space-y-1 p-6 text-center">
           <h3 className="text-2xl leading-none font-semibold tracking-tight">Welcome</h3>
           <p className="text-brand-2 text-sm">Sign in to your account or create a new one</p>
         </div>
 
-        {/* Card Content */}
         <div className="ring-offset-brand-1 focus-visible:ring-brand-12 mt-2 space-y-4 p-6 pt-0 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
           <form onSubmit={signUpForm.handleSubmit(onSignUp)} className="space-y-4">
             <Input
@@ -98,6 +96,13 @@ export default function SignUp() {
           </form>
         </div>
       </div>
+
+      <p className="mt-5 text-center text-gray-500">
+        Already have an account?{" "}
+        <Link to={href("/signin")} className="text-blue-600 underline">
+          Sign in
+        </Link>
+      </p>
     </div>
   );
 }
