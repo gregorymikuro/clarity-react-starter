@@ -25,7 +25,7 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
-export const unstable_middleware: Route.unstable_MiddlewareFunction[] = [
+export const middleware: Route.MiddlewareFunction[] = [
   async ({ context, request }) => {
     const url = new URL(request.url);
 

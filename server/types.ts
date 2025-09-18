@@ -1,4 +1,5 @@
 import type { Session } from "~/.server/auth";
+import type { Env, PublicEnv } from "~/.server/env";
 import type { HonoServerOptions } from "react-router-hono-server/node";
 
 export type SessionVariables = {
@@ -19,3 +20,14 @@ export type GetLoadContextFunction = Exclude<
 export type GetLoadContextFunctionOptions = Parameters<GetLoadContextFunction>["1"];
 
 export type HonoContext = Parameters<GetLoadContextFunction>["0"];
+
+export type BaseContext = SessionVariables & {
+  appVersion: string;
+  clientEnv: PublicEnv;
+  env: Env;
+};
+
+declare module "react-router" {
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+  interface RouterContextProvider extends BaseContext {}
+}
